@@ -1,0 +1,22 @@
+project_name: "Port-scanner-alert-system"
+
+masscan:
+  rate: "1000"
+  interface: ""
+  ports: "22,53,1883,9883"
+
+targets:
+  - "192.168.64.5"
+
+database:
+  path: "./scan_results.db"
+
+scheduler:
+  enabled: false
+  interval: "1m"
+
+telegram:
+  enabled: true
+
+smtp:
+  enabled: false
