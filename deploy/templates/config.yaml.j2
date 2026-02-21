@@ -1,0 +1,24 @@
+project_name: "Port-scanner-alert-system"
+
+masscan:
+  rate: "{{ masscan_rate }}"
+  interface: "{{ masscan_interface }}"
+  ports: "{{ masscan_ports }}"
+
+targets:
+{% for t in scan_targets %}
+  - "{{ t }}"
+{% endfor %}
+
+database:
+  path: "{{ app_dir }}/data/scan_results.db"
+
+scheduler:
+  enabled: {{ scheduler_enabled | lower }}
+  interval: "{{ scheduler_interval }}"
+
+telegram:
+  enabled: {{ telegram_enabled | lower }}
+
+smtp:
+  enabled: {{ smtp_enabled | lower }}

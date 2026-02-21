@@ -1,0 +1,21 @@
+[Unit]
+Description=Port Scanner Alert System
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory={{ app_dir }}
+ExecStart={{ app_dir }}/bin/scanner
+EnvironmentFile={{ app_dir }}/config/.env
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier={{ app_name }}
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
