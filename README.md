@@ -2,6 +2,10 @@
 
 Network port monitoring tool built on top of Masscan. Scans targets, grabs banners, detects changes and sends alerts via Telegram and email.
 
+## Документация на русском
+
+https://docs.google.com/document/d/1utFbbpa8TUC48n_SeSUyEx7IoRJyFNX5pF_kDyZpf1U/edit?usp=sharing
+
 ## Features
 
 - Masscan-based port scanning with banner grabbing
