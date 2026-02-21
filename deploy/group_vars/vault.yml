@@ -1,0 +1,6 @@
+vault_telegram_token: "123456:ABC-your-token"
+vault_telegram_chat_id: "your id here"
+vault_smtp_user: "you@gmail.com"
+vault_smtp_password: "app-password-here"
+vault_smtp_from: "you@gmail.com"
+vault_smtp_to: "recipient@example.com"

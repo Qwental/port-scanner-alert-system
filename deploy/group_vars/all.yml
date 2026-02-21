@@ -2,13 +2,9 @@ app_name: port-scanner
 app_user: scanner
 app_group: scanner
 app_dir: /opt/port-scanner
-app_bin: "{{ app_dir }}/bin/scanner"
-app_config: "{{ app_dir }}/config/config.yaml"
-app_env_file: "{{ app_dir }}/config/.env"
-app_db_path: "{{ app_dir }}/data/scan_results.db"
 
 masscan_rate: "1000"
-masscan_ports: "22,53,80,443,1883,8080,8443,9883"
+masscan_ports: "22,53,80,443,1883,8080,9883"
 masscan_interface: ""
 
 scan_targets:
@@ -18,15 +14,14 @@ scheduler_enabled: true
 scheduler_interval: "30m"
 
 telegram_enabled: true
-telegram_token: "{{ vault_telegram_token | default('') }}"
-telegram_chat_id: "{{ vault_telegram_chat_id | default(0) }}"
-
 smtp_enabled: false
+
 smtp_host: "smtp.gmail.com"
 smtp_port: 587
-smtp_user: "{{ vault_smtp_user | default('') }}"
-smtp_password: "{{ vault_smtp_password | default('') }}"
-smtp_from: "{{ vault_smtp_from | default('') }}"
-smtp_to: "{{ vault_smtp_to | default('') }}"
 
-local_binary_path: "../bin/scanner-linux-amd64"
+telegram_token: "{{ vault_telegram_token }}"
+telegram_chat_id: "{{ vault_telegram_chat_id }}"
+smtp_user: "{{ vault_smtp_user }}"
+smtp_password: "{{ vault_smtp_password }}"
+smtp_from: "{{ vault_smtp_from }}"
+smtp_to: "{{ vault_smtp_to }}"

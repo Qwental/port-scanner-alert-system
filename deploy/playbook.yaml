@@ -3,30 +3,12 @@
   hosts: scanners
   become: true
 
-  vars:
-    app_name: port-scanner
-    app_user: scanner
-    app_group: scanner
-    app_dir: /opt/port-scanner
-    local_binary: "../bin/scanner-linux-amd64"
-    local_env: "../.env"
-
-    masscan_rate: "1000"
-    masscan_ports: "22,53,1883,9883"
-    masscan_interface: ""
-    scan_targets:
-      - "192.168.64.5"
-    scheduler_enabled: true
-    scheduler_interval: "30m"
-    telegram_enabled: true
-    smtp_enabled: false
-
   pre_tasks:
-    - name: Check binary exists locally
+    - name: Check binary exists
       delegate_to: localhost
       become: false
       ansible.builtin.stat:
-        path: "{{ local_binary }}"
+        path: "../bin/scanner-linux-amd64"
       register: bin_stat
 
     - name: Fail if not built
@@ -35,7 +17,6 @@
       when: not bin_stat.stat.exists
 
   tasks:
-    # System deps
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
@@ -49,7 +30,6 @@
           - sqlite3
         state: present
 
-    # User and dirs
     - name: Create group
       ansible.builtin.group:
         name: "{{ app_group }}"
@@ -64,7 +44,7 @@
         system: true
         create_home: false
 
-    - name: Create dirs
+    - name: Create directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -77,10 +57,9 @@
         - "{{ app_dir }}/config"
         - "{{ app_dir }}/data"
 
-    # Deploy files
     - name: Copy binary
       ansible.builtin.copy:
-        src: "{{ local_binary }}"
+        src: "../bin/scanner-linux-amd64"
         dest: "{{ app_dir }}/bin/scanner"
         owner: root
         group: "{{ app_group }}"
@@ -103,9 +82,9 @@
         mode: "0640"
       notify: Restart service
 
-    - name: Copy .env
-      ansible.builtin.copy:
-        src: "{{ local_env }}"
+    - name: Deploy .env
+      ansible.builtin.template:
+        src: templates/scanner.env.j2
         dest: "{{ app_dir }}/config/.env"
         owner: "{{ app_user }}"
         group: "{{ app_group }}"
@@ -113,7 +92,6 @@
       notify: Restart service
       no_log: true
 
-    # Systemd (я юзаю debian по дефолту, так что на всяких alpine не будет работать)
     - name: Deploy systemd unit
       ansible.builtin.template:
         src: templates/scan-service.service.j2
@@ -130,8 +108,7 @@
         state: started
         daemon_reload: true
 
-    # Verify
-    - name: Wait a bit
+    - name: Wait
       ansible.builtin.pause:
         seconds: 3
 
